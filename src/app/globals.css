@@ -1,26 +1,149 @@
 @import "tailwindcss";
 
+/*
+ * Neumorphic design tokens.
+ * Every surface shares the page background; depth comes purely from a
+ * light/dark dual box-shadow pair, never from borders or flat color blocks.
+ */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --surface: #e8ebf1;
+  --surface-highlight: #ffffff;
+  --surface-shadow: #b3b9c7;
+
+  --text-primary: #2a2d3a;
+  --text-secondary: #5b6070;
+  --text-muted: #8b8fa3;
+
+  --accent: #6a63f1;
+  --accent-hover: #5a52e8;
+  --accent-foreground: #ffffff;
+
+  --success: #1f9d6c;
+  --danger: #e0507a;
+  --warning: #c98a1f;
+
+  --radius-card: 22px;
+  --radius-control: 14px;
+
+  /* offset / blur tuned small so depth stays subtle, never muddy */
+  --shadow-distance-sm: 4px;
+  --shadow-blur-sm: 8px;
+  --shadow-distance-md: 7px;
+  --shadow-blur-md: 15px;
+}
+
+.dark {
+  --surface: #2a2e3a;
+  /* dark-mode highlight is a lighter tint of the surface, not white — an
+     inverted-photo look reads as broken rather than extruded */
+  --surface-highlight: #363b4a;
+  --surface-shadow: #1a1c24;
+
+  --text-primary: #eceef5;
+  --text-secondary: #b0b4c5;
+  --text-muted: #7c8094;
+
+  --accent: #8a83ff;
+  --accent-hover: #9d97ff;
+  --accent-foreground: #14152a;
+
+  --success: #3fcf94;
+  --danger: #f2789f;
+  --warning: #e2ab4d;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-surface: var(--surface);
+  --color-surface-highlight: var(--surface-highlight);
+  --color-surface-shadow: var(--surface-shadow);
+
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-muted: var(--text-muted);
+
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-foreground: var(--accent-foreground);
+
+  --color-success: var(--success);
+  --color-danger: var(--danger);
+  --color-warning: var(--warning);
+
+  --radius-card: var(--radius-card);
+  --radius-control: var(--radius-control);
+
+  --font-sans: var(--font-inter);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  html {
+    color-scheme: light;
+  }
+  html.dark {
+    color-scheme: dark;
+  }
+  body {
+    background: var(--surface);
+    color: var(--text-primary);
+    font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+  }
+  /* Neumorphic shadows are too soft to satisfy WCAG 2.4.7 on their own —
+     every interactive element gets an explicit, visible focus ring. */
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+    border-radius: 6px;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+:root {
+  --shadow-raised-sm: var(--shadow-distance-sm) var(--shadow-distance-sm) var(--shadow-blur-sm) var(--surface-shadow),
+    calc(var(--shadow-distance-sm) * -1) calc(var(--shadow-distance-sm) * -1) var(--shadow-blur-sm) var(--surface-highlight);
+  --shadow-raised-md: var(--shadow-distance-md) var(--shadow-distance-md) var(--shadow-blur-md) var(--surface-shadow),
+    calc(var(--shadow-distance-md) * -1) calc(var(--shadow-distance-md) * -1) var(--shadow-blur-md) var(--surface-highlight);
+  --shadow-pressed-sm: inset var(--shadow-distance-sm) var(--shadow-distance-sm) var(--shadow-blur-sm) var(--surface-shadow),
+    inset calc(var(--shadow-distance-sm) * -1) calc(var(--shadow-distance-sm) * -1) var(--shadow-blur-sm) var(--surface-highlight);
+  --shadow-pressed-md: inset var(--shadow-distance-md) var(--shadow-distance-md) var(--shadow-blur-md) var(--surface-shadow),
+    inset calc(var(--shadow-distance-md) * -1) calc(var(--shadow-distance-md) * -1) var(--shadow-blur-md) var(--surface-highlight);
+}
+
+@layer utilities {
+  .neu-raised {
+    background: var(--surface);
+    box-shadow: var(--shadow-raised-md);
+  }
+
+  .neu-raised-sm {
+    background: var(--surface);
+    box-shadow: var(--shadow-raised-sm);
+  }
+
+  .neu-pressed {
+    background: var(--surface);
+    box-shadow: var(--shadow-pressed-sm);
+  }
+
+  .neu-pressed-lg {
+    background: var(--surface);
+    box-shadow: var(--shadow-pressed-md);
+  }
+
+  .neu-flat {
+    background: var(--surface);
+    box-shadow: none;
+  }
+
+  /* Momentary "push in" feedback for anything clickable, layered on top of
+     the raised variants — the signature neumorphic interaction. */
+  .neu-interactive {
+    transition: box-shadow 120ms ease, transform 120ms ease;
+  }
+  .neu-interactive:active:not(:disabled) {
+    box-shadow: var(--shadow-pressed-sm);
+    transform: scale(0.99);
+  }
+  .neu-interactive:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
 }

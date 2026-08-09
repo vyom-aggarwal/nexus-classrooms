@@ -36,6 +36,14 @@ yarn-error.log*
 # vercel
 .vercel
 
+# local dev tooling
+.claude/
+
+# local file storage (dev)
+/storage/uploads
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+/src/generated/prisma
