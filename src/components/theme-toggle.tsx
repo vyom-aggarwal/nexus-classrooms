@@ -17,7 +17,7 @@ export function ThemeToggle() {
   }, []);
 
   if (!mounted) {
-    return <div className="h-11 w-11" aria-hidden />;
+    return <div className="h-12 w-12 shrink-0" aria-hidden />;
   }
 
   const isDark = resolvedTheme === "dark";
@@ -26,8 +26,10 @@ export function ThemeToggle() {
     <NeumorphicButton
       variant="raised"
       size="icon"
+      shape="circle"
       aria-label={isDark ? "Switch to light theme" : "Switch to dark theme"}
       onClick={() => setTheme(isDark ? "light" : "dark")}
+      className="shrink-0"
     >
       {isDark ? <Sun size={18} /> : <Moon size={18} />}
     </NeumorphicButton>

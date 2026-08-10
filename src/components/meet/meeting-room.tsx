@@ -109,50 +109,60 @@ function RoomControls({
   const [isPending, setIsPending] = useState(false);
 
   return (
-    <div className="flex flex-col gap-3">
-      <Surface variant="raised" className="p-3 flex items-center justify-center gap-3 flex-wrap">
+    <div className="flex flex-col gap-3 items-center">
+      <Surface
+        variant="raised"
+        rounded="full"
+        className="px-4 py-3 flex items-center justify-center gap-3 flex-wrap"
+      >
         <NeumorphicButton
           size="icon"
+          shape="circle"
           pressed={!isMicrophoneEnabled}
           variant={isMicrophoneEnabled ? "raised" : "danger"}
           aria-label={isMicrophoneEnabled ? "Mute microphone" : "Unmute microphone"}
           onClick={() => localParticipant.setMicrophoneEnabled(!isMicrophoneEnabled)}
         >
-          {isMicrophoneEnabled ? <Mic size={18} /> : <MicOff size={18} />}
+          {isMicrophoneEnabled ? <Mic size={19} /> : <MicOff size={19} />}
         </NeumorphicButton>
 
         <NeumorphicButton
           size="icon"
+          shape="circle"
           pressed={!isCameraEnabled}
           variant={isCameraEnabled ? "raised" : "danger"}
           aria-label={isCameraEnabled ? "Turn off camera" : "Turn on camera"}
           onClick={() => localParticipant.setCameraEnabled(!isCameraEnabled)}
         >
-          {isCameraEnabled ? <Video size={18} /> : <VideoOff size={18} />}
+          {isCameraEnabled ? <Video size={19} /> : <VideoOff size={19} />}
         </NeumorphicButton>
 
         <NeumorphicButton
           size="icon"
+          shape="circle"
           pressed={isScreenShareEnabled}
           aria-label={isScreenShareEnabled ? "Stop screen share" : "Share screen"}
           onClick={() => localParticipant.setScreenShareEnabled(!isScreenShareEnabled)}
         >
-          {isScreenShareEnabled ? <ScreenShareOff size={18} /> : <ScreenShare size={18} />}
+          {isScreenShareEnabled ? <ScreenShareOff size={19} /> : <ScreenShare size={19} />}
         </NeumorphicButton>
 
         <NeumorphicButton
           size="icon"
+          shape="circle"
           pressed={showParticipants}
           aria-label="Toggle participant list"
           onClick={() => setShowParticipants((v) => !v)}
         >
-          <Users size={18} />
+          <Users size={19} />
         </NeumorphicButton>
 
         {isHost && (
           <>
+            <span aria-hidden className="w-px h-7 bg-[var(--surface-shadow)] opacity-50 mx-1" />
             <NeumorphicButton
               size="icon"
+              shape="circle"
               pressed={locked}
               aria-label={locked ? "Unlock meeting" : "Lock meeting"}
               disabled={isPending}
@@ -163,25 +173,23 @@ function RoomControls({
                 setIsPending(false);
               }}
             >
-              {locked ? <Lock size={18} /> : <Unlock size={18} />}
+              {locked ? <Lock size={19} /> : <Unlock size={19} />}
             </NeumorphicButton>
-            <NeumorphicButton
-              size="sm"
-              variant="flat"
-              onClick={() => muteAllAction(meetingId)}
-            >
+            <NeumorphicButton size="sm" onClick={() => muteAllAction(meetingId)}>
               Mute all
             </NeumorphicButton>
           </>
         )}
 
+        <span aria-hidden className="w-px h-7 bg-[var(--surface-shadow)] opacity-50 mx-1" />
         <NeumorphicButton
           size="icon"
+          shape="circle"
           variant="danger"
           aria-label="Leave meeting"
           onClick={() => room.disconnect()}
         >
-          <PhoneOff size={18} />
+          <PhoneOff size={19} />
         </NeumorphicButton>
       </Surface>
 
@@ -194,36 +202,51 @@ function ParticipantPanel({ meetingId, isHost }: { meetingId: string; isHost: bo
   const participants = useParticipants();
 
   return (
-    <Surface variant="raised" className="p-4 flex flex-col gap-2 max-w-sm">
-      <h3 className="text-sm font-semibold text-[var(--text-primary)]">Participants ({participants.length})</h3>
-      {participants.map((p) => (
-        <div key={p.identity} className="flex items-center justify-between text-sm py-1">
-          <span className="text-[var(--text-primary)] truncate">
-            {p.name || p.identity}
-            {p.isLocal && " (You)"}
-          </span>
-          {isHost && !p.isLocal && (
-            <div className="flex gap-1 shrink-0">
-              <NeumorphicButton
-                size="icon"
-                variant="flat"
-                aria-label={`Mute ${p.name || p.identity}`}
-                onClick={() => muteParticipantAction(meetingId, p.identity)}
+    <Surface variant="raised" className="p-5 flex flex-col gap-3 w-full max-w-sm">
+      <h3 className="text-sm font-semibold text-[var(--text-primary)]">
+        Participants ({participants.length})
+      </h3>
+      <div className="flex flex-col neu-divide">
+        {participants.map((p) => (
+          <div key={p.identity} className="flex items-center justify-between gap-3 py-2.5">
+            <div className="flex items-center gap-2.5 min-w-0">
+              <Surface
+                variant="pressed"
+                depth="sm"
+                rounded="full"
+                className="h-8 w-8 shrink-0 flex items-center justify-center text-xs font-bold text-[var(--accent-text)]"
               >
-                <MicOff size={14} />
-              </NeumorphicButton>
-              <NeumorphicButton
-                size="icon"
-                variant="danger"
-                aria-label={`Remove ${p.name || p.identity}`}
-                onClick={() => removeParticipantAction(meetingId, p.identity)}
-              >
-                <UserX size={14} />
-              </NeumorphicButton>
+                {(p.name || p.identity).charAt(0).toUpperCase()}
+              </Surface>
+              <span className="text-sm text-[var(--text-primary)] truncate">
+                {p.name || p.identity}
+                {p.isLocal && <span className="text-[var(--text-muted)]"> (You)</span>}
+              </span>
             </div>
-          )}
-        </div>
-      ))}
+            {isHost && !p.isLocal && (
+              <div className="flex gap-1.5 shrink-0">
+                <NeumorphicButton
+                  size="icon-sm"
+                  shape="circle"
+                  aria-label={`Mute ${p.name || p.identity}`}
+                  onClick={() => muteParticipantAction(meetingId, p.identity)}
+                >
+                  <MicOff size={14} />
+                </NeumorphicButton>
+                <NeumorphicButton
+                  size="icon-sm"
+                  shape="circle"
+                  variant="danger"
+                  aria-label={`Remove ${p.name || p.identity}`}
+                  onClick={() => removeParticipantAction(meetingId, p.identity)}
+                >
+                  <UserX size={14} />
+                </NeumorphicButton>
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
     </Surface>
   );
 }

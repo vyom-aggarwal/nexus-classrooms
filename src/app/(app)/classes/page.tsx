@@ -10,16 +10,25 @@ export default async function ClassesPage() {
   const classes = await getMyClasses(user.id, user.role);
 
   return (
-    <div className="max-w-5xl mx-auto flex flex-col gap-6">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl md:text-3xl font-bold text-[var(--text-primary)]">Classes</h1>
+    <div className="max-w-5xl mx-auto flex flex-col gap-7">
+      <div className="flex flex-wrap items-center justify-between gap-4">
+        <div>
+          <h1 className="text-3xl md:text-4xl font-bold text-[var(--text-primary)] tracking-tight">Classes</h1>
+          <p className="text-[var(--text-secondary)] mt-1.5">
+            {classes.length === 0
+              ? user.role === "TEACHER"
+                ? "Create your first class to get started."
+                : "Join a class with an invite code."
+              : `${classes.length} active ${classes.length === 1 ? "class" : "classes"}`}
+          </p>
+        </div>
       </div>
 
       <ClassActionPanel role={user.role} />
 
       {classes.length === 0 ? (
         <EmptyState
-          icon={<BookOpen size={28} />}
+          icon={<BookOpen size={26} />}
           title={user.role === "TEACHER" ? "No classes yet" : "You haven't joined a class yet"}
           description={
             user.role === "TEACHER"
@@ -28,7 +37,7 @@ export default async function ClassesPage() {
           }
         />
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
           {classes.map((c) => (
             <ClassCard
               key={c.id}

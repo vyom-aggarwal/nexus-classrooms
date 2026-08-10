@@ -2,7 +2,7 @@
 
 import { useActionState } from "react";
 import { Surface } from "@/components/ui/surface";
-import { NeumorphicTextarea } from "@/components/ui/input";
+import { NeumorphicTextarea, NeumorphicFileInput } from "@/components/ui/input";
 import { NeumorphicButton } from "@/components/ui/button";
 import { AttachmentList } from "@/components/classwork/attachment-list";
 import { StatusBadge } from "@/components/classwork/status-badge";
@@ -27,20 +27,24 @@ export function SubmissionComposer({ postId, points, submission }: SubmissionCom
   const status = submission?.status ?? "MISSING";
 
   return (
-    <Surface variant="raised" className="p-6 flex flex-col gap-4">
-      <div className="flex items-center justify-between">
-        <h2 className="font-semibold text-[var(--text-primary)]">Your work</h2>
+    <Surface variant="raised" className="p-6 md:p-7 flex flex-col gap-5">
+      <div className="flex items-center justify-between gap-3">
+        <h2 className="font-semibold text-[var(--text-primary)] text-lg">Your work</h2>
         <StatusBadge status={status} />
       </div>
 
       {submission?.grade && (
-        <Surface variant="pressed" className="p-4 flex flex-col gap-1">
-          <p className="font-semibold text-[var(--text-primary)]">
-            {submission.grade.score}
-            {points != null ? ` / ${points}` : ""}
-          </p>
+        <Surface variant="pressed" rounded="control" className="p-5 flex flex-col gap-2">
+          <div className="flex items-baseline gap-1.5">
+            <span className="text-3xl font-bold text-[var(--text-primary)] tabular-nums leading-none">
+              {submission.grade.score}
+            </span>
+            {points != null && (
+              <span className="text-base text-[var(--text-muted)] font-medium">/ {points}</span>
+            )}
+          </div>
           {submission.grade.feedback && (
-            <p className="text-sm text-[var(--text-secondary)]">{submission.grade.feedback}</p>
+            <p className="text-sm text-[var(--text-secondary)] leading-relaxed">{submission.grade.feedback}</p>
           )}
         </Surface>
       )}
@@ -56,21 +60,15 @@ export function SubmissionComposer({ postId, points, submission }: SubmissionCom
           defaultValue={submission?.content ?? ""}
           placeholder="Type your response here…"
         />
-        <div className="flex flex-col gap-1.5">
-          <label htmlFor="files" className="text-sm font-medium text-[var(--text-secondary)]">
-            Attach files
-          </label>
-          <input
-            id="files"
-            name="files"
-            type="file"
-            multiple
-            accept=".pdf,.png,.jpg,.jpeg,.gif,.doc,.docx"
-            className="text-sm text-[var(--text-primary)] file:mr-3 file:rounded-[var(--radius-control)] file:border-0 file:bg-[var(--surface)] file:px-3 file:py-1.5 file:neu-raised-sm"
-          />
-        </div>
+        <NeumorphicFileInput
+          id="files"
+          name="files"
+          label="Attach files"
+          multiple
+          accept=".pdf,.png,.jpg,.jpeg,.gif,.doc,.docx"
+        />
         {state?.error && (
-          <p className="text-sm text-[var(--danger)]" role="alert">
+          <p className="text-sm text-[var(--danger-text)] font-medium" role="alert">
             {state.error}
           </p>
         )}

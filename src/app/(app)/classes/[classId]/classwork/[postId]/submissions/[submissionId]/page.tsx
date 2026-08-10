@@ -32,11 +32,23 @@ export default async function SubmissionDetailPage({
 
   return (
     <div className="flex flex-col gap-6 max-w-2xl mx-auto">
-      <Surface variant="raised" className="p-6 flex flex-col gap-4">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-xl font-bold text-[var(--text-primary)]">{submission.student.name}</h1>
-            <p className="text-sm text-[var(--text-secondary)]">{submission.post.title}</p>
+      <Surface variant="raised" className="p-6 md:p-7 flex flex-col gap-5">
+        <div className="flex items-start justify-between gap-4">
+          <div className="flex items-center gap-3.5 min-w-0">
+            <Surface
+              variant="pressed"
+              depth="sm"
+              rounded="full"
+              className="h-12 w-12 shrink-0 flex items-center justify-center text-sm font-bold text-[var(--accent-text)]"
+            >
+              {submission.student.name.charAt(0).toUpperCase()}
+            </Surface>
+            <div className="min-w-0">
+              <h1 className="text-xl font-bold text-[var(--text-primary)] truncate">
+                {submission.student.name}
+              </h1>
+              <p className="text-sm text-[var(--text-secondary)] truncate">{submission.post.title}</p>
+            </div>
           </div>
           <StatusBadge status={submission.status} />
         </div>
@@ -48,7 +60,11 @@ export default async function SubmissionDetailPage({
         )}
 
         {submission.content && (
-          <p className="text-[var(--text-primary)] whitespace-pre-wrap">{submission.content}</p>
+          <Surface variant="pressed" rounded="control" className="p-5">
+            <p className="text-[var(--text-primary)] whitespace-pre-wrap leading-relaxed">
+              {submission.content}
+            </p>
+          </Surface>
         )}
 
         <AttachmentList attachments={submission.attachments.map((a) => a.attachment)} />
@@ -58,8 +74,8 @@ export default async function SubmissionDetailPage({
         )}
       </Surface>
 
-      <Surface variant="raised" className="p-6 flex flex-col gap-2">
-        <h2 className="font-semibold text-[var(--text-primary)]">Grade</h2>
+      <Surface variant="raised" className="p-6 md:p-7 flex flex-col gap-4">
+        <h2 className="font-semibold text-[var(--text-primary)] text-lg">Grade</h2>
         <GradeForm
           classId={classId}
           postId={postId}

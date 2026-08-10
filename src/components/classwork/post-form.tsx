@@ -1,7 +1,12 @@
 "use client";
 
 import { useActionState } from "react";
-import { NeumorphicInput, NeumorphicTextarea } from "@/components/ui/input";
+import {
+  NeumorphicInput,
+  NeumorphicTextarea,
+  NeumorphicSelect,
+  NeumorphicFileInput,
+} from "@/components/ui/input";
 import { NeumorphicButton } from "@/components/ui/button";
 import { Surface } from "@/components/ui/surface";
 import { savePostAction } from "@/lib/actions/classwork";
@@ -51,24 +56,14 @@ export function PostForm({ classId, postId, type, topics, initial }: PostFormPro
       />
 
       {topics.length > 0 && (
-        <div className="flex flex-col gap-1.5">
-          <label htmlFor="topicId" className="text-sm font-medium text-[var(--text-secondary)]">
-            Topic
-          </label>
-          <select
-            id="topicId"
-            name="topicId"
-            defaultValue={initial?.topicId ?? ""}
-            className="neu-pressed rounded-[var(--radius-control)] px-4 py-2.5 text-[var(--text-primary)] outline-none"
-          >
-            <option value="">No topic</option>
-            {topics.map((t) => (
-              <option key={t.id} value={t.id}>
-                {t.title}
-              </option>
-            ))}
-          </select>
-        </div>
+        <NeumorphicSelect label="Topic" name="topicId" defaultValue={initial?.topicId ?? ""}>
+          <option value="">No topic</option>
+          {topics.map((t) => (
+            <option key={t.id} value={t.id}>
+              {t.title}
+            </option>
+          ))}
+        </NeumorphicSelect>
       )}
 
       {type === "ASSIGNMENT" && (
@@ -89,26 +84,23 @@ export function PostForm({ classId, postId, type, topics, initial }: PostFormPro
         </div>
       )}
 
-      <Surface variant="pressed" className="p-4 flex flex-col gap-3">
-        <label htmlFor="attachments" className="text-sm font-medium text-[var(--text-secondary)]">
-          Attach files
-        </label>
-        <input
+      <Surface variant="pressed" className="p-5 flex flex-col gap-4">
+        <NeumorphicFileInput
           id="attachments"
           name="attachments"
-          type="file"
+          label="Attachments"
           multiple
           accept=".pdf,.png,.jpg,.jpeg,.gif,.doc,.docx"
-          className="text-sm text-[var(--text-primary)] file:mr-3 file:rounded-[var(--radius-control)] file:border-0 file:bg-[var(--surface)] file:px-3 file:py-1.5 file:neu-raised-sm"
+          hint="PDF, images, and documents."
         />
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <NeumorphicInput name="linkLabel" placeholder="Link label (optional)" />
           <NeumorphicInput name="linkUrl" placeholder="https://…" type="url" />
         </div>
       </Surface>
 
       {state?.error && (
-        <p className="text-sm text-[var(--danger)]" role="alert">
+        <p className="text-sm text-[var(--danger-text)] font-medium" role="alert">
           {state.error}
         </p>
       )}

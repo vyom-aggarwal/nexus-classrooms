@@ -1,13 +1,14 @@
 import Link from "next/link";
 import { format } from "date-fns";
-import { Pencil, Users } from "lucide-react";
+import { Pencil, Users, Clock, Award, ChevronRight } from "lucide-react";
 import { requireUser } from "@/lib/session";
 import { getClassForMember } from "@/lib/queries/classes";
 import { getPostDetail } from "@/lib/queries/classwork";
 import { Surface } from "@/components/ui/surface";
-import { NeumorphicButton } from "@/components/ui/button";
+import { neumorphicButtonClasses } from "@/components/ui/button";
 import { AttachmentList } from "@/components/classwork/attachment-list";
 import { SubmissionComposer } from "@/components/classwork/submission-composer";
+import { StatusBadge } from "@/components/classwork/status-badge";
 
 export default async function ClassworkDetailPage({
   params,
@@ -24,47 +25,81 @@ export default async function ClassworkDetailPage({
 
   return (
     <div className="flex flex-col gap-6 max-w-3xl mx-auto">
-      <Surface variant="raised" className="p-6 flex flex-col gap-4">
+      <Surface variant="raised" className="p-6 md:p-7 flex flex-col gap-5">
         <div className="flex items-start justify-between gap-4">
-          <div>
-            {post.topic && (
-              <p className="text-xs uppercase tracking-wide text-[var(--text-muted)] mb-1">{post.topic.title}</p>
-            )}
-            <h1 className="text-xl font-bold text-[var(--text-primary)]">{post.title}</h1>
-            <p className="text-xs text-[var(--text-secondary)] mt-1">
+          <div className="min-w-0">
+            <div className="flex items-center gap-2 mb-2">
+              {post.topic && (
+                <span className="text-xs uppercase tracking-wider text-[var(--text-muted)] font-semibold">
+                  {post.topic.title}
+                </span>
+              )}
+              {post.status === "DRAFT" && <StatusBadge status="DRAFT" />}
+            </div>
+            <h1 className="text-2xl font-bold text-[var(--text-primary)] tracking-tight">{post.title}</h1>
+            <p className="text-xs text-[var(--text-muted)] mt-1.5">
               Posted by {post.author.name} · {format(post.createdAt, "MMM d, yyyy")}
-              {post.status === "DRAFT" && " · Draft"}
             </p>
           </div>
           {isOwner && (
-            <Link href={`/classes/${classId}/classwork/${post.id}/edit`}>
-              <NeumorphicButton variant="flat" size="sm">
-                <Pencil size={16} />
-                Edit
-              </NeumorphicButton>
+            <Link
+              href={`/classes/${classId}/classwork/${post.id}/edit`}
+              className={neumorphicButtonClasses({ size: "sm", className: "shrink-0" })}
+            >
+              <Pencil size={15} />
+              Edit
             </Link>
           )}
         </div>
 
         {(post.dueAt || post.points != null) && (
-          <div className="flex gap-4 text-sm text-[var(--text-secondary)]">
-            {post.dueAt && <span>Due {format(post.dueAt, "MMM d, yyyy 'at' h:mm a")}</span>}
-            {post.points != null && <span>{post.points} points</span>}
+          <div className="flex flex-wrap gap-2.5">
+            {post.dueAt && (
+              <Surface
+                variant="pressed"
+                depth="sm"
+                rounded="full"
+                className="px-4 py-2 text-xs font-medium text-[var(--text-secondary)] inline-flex items-center gap-2"
+              >
+                <Clock size={13} />
+                Due {format(post.dueAt, "MMM d, yyyy 'at' h:mm a")}
+              </Surface>
+            )}
+            {post.points != null && (
+              <Surface
+                variant="pressed"
+                depth="sm"
+                rounded="full"
+                className="px-4 py-2 text-xs font-medium text-[var(--text-secondary)] inline-flex items-center gap-2"
+              >
+                <Award size={13} />
+                {post.points} points
+              </Surface>
+            )}
           </div>
         )}
 
-        {post.body && <p className="text-[var(--text-primary)] whitespace-pre-wrap">{post.body}</p>}
+        {post.body && (
+          <p className="text-[var(--text-primary)] whitespace-pre-wrap leading-relaxed">{post.body}</p>
+        )}
 
         <AttachmentList attachments={post.attachments} />
 
         {isOwner && post.type === "ASSIGNMENT" && (
-          <Link href={`/classes/${classId}/classwork/${post.id}/submissions`}>
-            <Surface variant="pressed" className="p-4 flex items-center justify-between">
-              <span className="flex items-center gap-2 text-sm text-[var(--text-primary)]">
-                <Users size={16} />
+          <Link href={`/classes/${classId}/classwork/${post.id}/submissions`} className="block group">
+            <Surface
+              variant="pressed"
+              rounded="control"
+              className="p-4 flex items-center justify-between gap-3"
+            >
+              <span className="flex items-center gap-2.5 text-sm font-medium text-[var(--text-primary)]">
+                <Users size={17} className="text-[var(--accent-text)]" />
                 View submissions
               </span>
-              <span className="text-sm text-[var(--accent)] font-medium">Open →</span>
+              <span className="flex items-center gap-1 text-sm text-[var(--accent-text)] font-medium">
+                Open
+                <ChevronRight size={15} className="group-hover:translate-x-0.5 transition-transform" />
+              </span>
             </Surface>
           </Link>
         )}

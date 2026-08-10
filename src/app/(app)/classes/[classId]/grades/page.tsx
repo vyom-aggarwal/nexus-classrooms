@@ -5,6 +5,7 @@ import { getClassForMember } from "@/lib/queries/classes";
 import { getGradebook, getStudentGradesForClass } from "@/lib/queries/grades";
 import { EmptyState } from "@/components/empty-state";
 import { Surface } from "@/components/ui/surface";
+import { NeumorphicProgress } from "@/components/ui/progress";
 import { GradebookGrid } from "@/components/classwork/gradebook-grid";
 
 export default async function ClassGradesPage({ params }: { params: Promise<{ classId: string }> }) {
@@ -52,32 +53,48 @@ export default async function ClassGradesPage({ params }: { params: Promise<{ cl
   const { posts, overallPercent } = await getStudentGradesForClass(classId, user.id);
 
   return (
-    <div className="flex flex-col gap-4 max-w-2xl">
-      <Surface variant="pressed" className="p-4 flex items-center justify-between">
-        <span className="text-sm text-[var(--text-secondary)]">Overall grade</span>
-        <span className="text-lg font-bold text-[var(--text-primary)]">
-          {overallPercent != null ? `${Math.round(overallPercent)}%` : "—"}
-        </span>
+    <div className="flex flex-col gap-5 max-w-2xl">
+      <Surface variant="raised" className="p-6 flex flex-col gap-4">
+        <div className="flex items-end justify-between gap-4">
+          <span className="text-sm text-[var(--text-secondary)]">Overall grade</span>
+          <span className="text-3xl font-bold text-[var(--text-primary)] tabular-nums leading-none">
+            {overallPercent != null ? `${Math.round(overallPercent)}%` : "—"}
+          </span>
+        </div>
+        {overallPercent != null && (
+          <NeumorphicProgress
+            value={overallPercent}
+            tone={overallPercent >= 80 ? "success" : overallPercent >= 60 ? "warning" : "danger"}
+            label="Overall grade"
+          />
+        )}
       </Surface>
 
       {posts.length === 0 ? (
-        <EmptyState icon={<GraduationCap size={28} />} title="No graded work yet" />
+        <EmptyState icon={<GraduationCap size={26} />} title="No graded work yet" />
       ) : (
-        <Surface variant="raised" className="p-2 flex flex-col divide-y divide-[var(--surface-shadow)]/20">
+        <Surface variant="raised" className="p-3 flex flex-col neu-divide">
           {posts.map((post) => {
             const grade = post.submissions[0]?.grade;
             return (
-              <div key={post.id} className="p-3 flex items-center justify-between gap-4">
+              <div key={post.id} className="p-3 flex items-start justify-between gap-4">
                 <div className="min-w-0">
                   <p className="text-sm font-medium text-[var(--text-primary)] truncate">{post.title}</p>
                   {post.dueAt && (
-                    <p className="text-xs text-[var(--text-muted)]">Due {format(post.dueAt, "MMM d")}</p>
+                    <p className="text-xs text-[var(--text-muted)] mt-0.5">Due {format(post.dueAt, "MMM d")}</p>
                   )}
                   {grade?.feedback && (
-                    <p className="text-xs text-[var(--text-secondary)] mt-1">{grade.feedback}</p>
+                    <Surface
+                      variant="pressed"
+                      depth="sm"
+                      rounded="control"
+                      className="mt-2 px-3 py-2 text-xs text-[var(--text-secondary)] leading-relaxed"
+                    >
+                      {grade.feedback}
+                    </Surface>
                   )}
                 </div>
-                <span className="text-sm font-semibold text-[var(--text-primary)] shrink-0">
+                <span className="text-sm font-bold text-[var(--text-primary)] shrink-0 tabular-nums">
                   {grade ? `${grade.score}${post.points != null ? ` / ${post.points}` : ""}` : "—"}
                 </span>
               </div>
