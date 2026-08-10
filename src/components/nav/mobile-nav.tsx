@@ -22,7 +22,7 @@ export function MobileNav() {
       aria-label="Primary"
       variant="raised"
       rounded="card"
-      className="md:hidden fixed bottom-4 left-4 right-4 p-2 flex justify-around"
+      className="md:hidden fixed bottom-4 left-4 right-4 p-2 flex justify-around z-40"
     >
       {NAV_ITEMS.map(({ href, label, icon: Icon }) => {
         const active = pathname === href || pathname.startsWith(href + "/");
@@ -31,13 +31,12 @@ export function MobileNav() {
             key={href}
             href={href}
             aria-current={active ? "page" : undefined}
-            aria-label={label}
             className={cn(
-              "flex flex-col items-center gap-1 px-3 py-1.5 rounded-[var(--radius-control)] text-xs",
-              active ? "neu-pressed text-[var(--accent)]" : "text-[var(--text-secondary)]",
+              "flex flex-col items-center gap-1 px-4 py-2 rounded-[var(--radius-control)] text-[11px] font-medium transition-all duration-200",
+              active ? "neu-pressed text-[var(--accent-text)]" : "text-[var(--text-secondary)]",
             )}
           >
-            <Icon size={20} />
+            <Icon size={19} />
             {label}
           </Link>
         );

@@ -39,6 +39,7 @@ export async function getStudentHomeData(userId: string) {
   const [classes, todaysEvents, upcomingWork] = await Promise.all([
     prisma.class.findMany({
       where: { id: { in: classIds }, archivedAt: null },
+      include: { owner: { select: { name: true } } },
       orderBy: { createdAt: "desc" },
     }),
     getCalendarItems(userId, startOfDay(now), endOfDay(now)).then((items) => items.filter((i) => i.kind === "EVENT")),

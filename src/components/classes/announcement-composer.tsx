@@ -24,7 +24,7 @@ export function AnnouncementComposer({ classId }: { classId: string }) {
         required
       />
       {state?.error && (
-        <p className="text-sm text-[var(--danger)]" role="alert">
+        <p className="text-sm text-[var(--danger-text)] font-medium" role="alert">
           {state.error}
         </p>
       )}

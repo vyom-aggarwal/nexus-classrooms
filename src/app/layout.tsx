@@ -1,10 +1,18 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Poppins, JetBrains_Mono } from "next/font/google";
 import { ThemeProvider } from "@/components/theme-provider";
 import "./globals.css";
 
-const inter = Inter({
-  variable: "--font-inter",
+const poppins = Poppins({
+  variable: "--font-poppins",
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+});
+
+// Reserved for codes and figures that should read as machine output —
+// invite codes, card numbers.
+const jetbrainsMono = JetBrains_Mono({
+  variable: "--font-mono-code",
   subsets: ["latin"],
 });
 
@@ -17,7 +25,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${inter.variable} h-full antialiased`}
+      className={`${poppins.variable} ${jetbrainsMono.variable} h-full antialiased`}
       suppressHydrationWarning
     >
       <body className="min-h-full flex flex-col">

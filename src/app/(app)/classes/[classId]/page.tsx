@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { format } from "date-fns";
 import { MessageSquare, Video } from "lucide-react";
 import { prisma } from "@/lib/prisma";
 import { requireUser } from "@/lib/session";
@@ -8,7 +9,7 @@ import { EmptyState } from "@/components/empty-state";
 import { AnnouncementComposer } from "@/components/classes/announcement-composer";
 import { PostCard } from "@/components/classes/post-card";
 import { NeumorphicCard, Surface } from "@/components/ui/surface";
-import { NeumorphicButton } from "@/components/ui/button";
+import { neumorphicButtonClasses } from "@/components/ui/button";
 
 export default async function ClassStreamPage({ params }: { params: Promise<{ classId: string }> }) {
   const { classId } = await params;
@@ -28,13 +29,25 @@ export default async function ClassStreamPage({ params }: { params: Promise<{ cl
   return (
     <div className="flex flex-col gap-4">
       {liveEvent && (
-        <Surface variant="raised" className="p-4 flex items-center justify-between gap-4">
-          <div className="flex items-center gap-2 text-[var(--text-primary)]">
-            <Video size={18} className="text-[var(--accent)]" />
-            <span className="font-medium">{liveEvent.title} is starting soon</span>
+        <Surface variant="raised" glow="accent" className="p-5 flex flex-wrap items-center justify-between gap-4">
+          <div className="flex items-center gap-3 min-w-0">
+            <Surface
+              variant="raised"
+              depth="sm"
+              rounded="control"
+              className="h-11 w-11 shrink-0 flex items-center justify-center text-[var(--accent-foreground)] bg-[linear-gradient(145deg,var(--accent-hover),var(--accent))]"
+            >
+              <Video size={20} />
+            </Surface>
+            <div className="min-w-0">
+              <p className="font-semibold text-[var(--text-primary)] truncate">{liveEvent.title}</p>
+              <p className="text-sm text-[var(--text-secondary)]">
+                Starting soon · {format(liveEvent.startAt, "h:mm a")}
+              </p>
+            </div>
           </div>
-          <Link href={`/meet/${liveEvent.id}`}>
-            <NeumorphicButton variant="primary" size="sm">Join</NeumorphicButton>
+          <Link href={`/meet/${liveEvent.id}`} className={neumorphicButtonClasses({ variant: "primary" })}>
+            Join now
           </Link>
         </Surface>
       )}

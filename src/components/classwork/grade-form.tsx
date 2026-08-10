@@ -43,11 +43,11 @@ export function GradeForm({
         placeholder="Leave a note for the student…"
       />
       {state?.error && (
-        <p className="text-sm text-[var(--danger)]" role="alert">
+        <p className="text-sm text-[var(--danger-text)] font-medium" role="alert">
           {state.error}
         </p>
       )}
-      <NeumorphicButton type="submit" variant="primary" disabled={isPending} className="self-end">
+      <NeumorphicButton type="submit" variant="success" disabled={isPending} className="self-end">
         {isPending ? "Saving…" : "Return grade"}
       </NeumorphicButton>
     </form>
