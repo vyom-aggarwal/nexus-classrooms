@@ -1,4 +1,9 @@
-import { RRule, Frequency } from "rrule";
+// Import RRule only. rrule resolves to its ESM build under Next's bundler but
+// its CJS build under plain Node ESM (the seed script), and the two disagree
+// on what's importable: there's no `default` in the ESM build, and Node's CJS
+// lexer doesn't surface `Frequency`. `RRule` is the one binding both agree on,
+// and it carries the frequency constants as statics, so nothing else is needed.
+import { RRule } from "rrule";
 
 export type RecurrenceFreq = "NONE" | "DAILY" | "WEEKLY";
 
@@ -15,7 +20,9 @@ export function buildRecurrenceRule(input: RecurrenceInput, dtstart: Date): stri
   if (input.freq === "NONE") return null;
 
   const rule = new RRule({
-    freq: input.freq === "DAILY" ? Frequency.DAILY : Frequency.WEEKLY,
+    // RRule exposes the frequency constants as statics, avoiding a second
+    // import that would hit the same CJS interop problem.
+    freq: input.freq === "DAILY" ? RRule.DAILY : RRule.WEEKLY,
     dtstart,
     until: input.until ?? undefined,
     byweekday:

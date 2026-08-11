@@ -18,13 +18,33 @@ npm install
 
 ### 2. Start Postgres
 
-Requires [Docker Desktop](https://www.docker.com/products/docker-desktop/).
+**No Docker required.** Prisma ships a local Postgres:
 
 ```bash
-docker compose up -d
+npm run db:start
 ```
 
-This starts Postgres on `localhost:5432` (credentials in [`docker-compose.yml`](docker-compose.yml), already wired into `.env`).
+This starts a real PostgreSQL server on `localhost:51214` in the background (`npm run db:stop` to stop it).
+
+Then create the app database — Postgres copies new databases from `template1` by
+default, so create from the pristine `template0` to guarantee a clean schema:
+
+```bash
+npm run db:create
+```
+
+Set `DATABASE_URL` in `.env` to:
+
+```
+postgresql://postgres:postgres@localhost:51214/nexus?sslmode=disable
+```
+
+<details>
+<summary>Alternative: Docker Compose</summary>
+
+If you'd rather use Docker, [`docker-compose.yml`](docker-compose.yml) is included — run `npm run db:up`, and set `DATABASE_URL` to the `localhost:5432` URL in [`.env.example`](.env.example).
+
+</details>
 
 ### 3. Configure environment
 
