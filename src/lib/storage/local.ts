@@ -3,7 +3,13 @@ import path from "path";
 import { randomUUID } from "crypto";
 import type { FileStorage, StoredFile } from "./types";
 
-const BASE_DIR = path.resolve(process.cwd(), process.env.STORAGE_LOCAL_DIR ?? "./storage/uploads");
+// Resolved at runtime from configuration, so the bundler must not try to trace
+// it — without the opt-out Turbopack conservatively assumes any file under cwd
+// could be read and bundles the whole source tree into the server output.
+const BASE_DIR = path.resolve(
+  /*turbopackIgnore: true*/ process.cwd(),
+  process.env.STORAGE_LOCAL_DIR ?? "./storage/uploads",
+);
 
 // Attachment mimeType is stored alongside the file on disk as a tiny sidecar
 // JSON file, since the local filesystem has nowhere else to keep it.
