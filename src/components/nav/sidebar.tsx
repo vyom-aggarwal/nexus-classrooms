@@ -6,6 +6,7 @@ import { Home, BookOpen, Calendar, GraduationCap, Video, LogOut } from "lucide-r
 import { Surface } from "@/components/ui/surface";
 import { NeumorphicButton, neumorphicButtonClasses } from "@/components/ui/button";
 import { signOutAction } from "@/lib/actions/auth";
+import { Logo } from "@/components/logo";
 import { cn } from "@/lib/utils";
 
 const NAV_ITEMS = [
@@ -32,22 +33,7 @@ export function Sidebar({ userName, userRole, liveMeeting }: SidebarProps) {
   return (
     <aside className="hidden md:flex w-[17rem] shrink-0 p-6 pr-0">
       <Surface variant="raised" rounded="card" className="flex-1 p-5 flex flex-col gap-8 sticky top-6 h-fit max-h-[calc(100vh-3rem)]">
-        <div className="flex items-center gap-3 px-1">
-          <Surface
-            variant="raised"
-            depth="sm"
-            rounded="control"
-            glow="accent"
-            className="h-10 w-10 flex items-center justify-center font-bold text-[var(--accent-foreground)] bg-[linear-gradient(145deg,var(--accent-hover),var(--accent))]"
-          >
-            N
-          </Surface>
-          <span className="font-semibold text-[var(--text-primary)] leading-tight">
-            Nexus
-            <br />
-            <span className="text-xs font-normal text-[var(--text-muted)]">Classroom</span>
-          </span>
-        </div>
+        <Logo size={40} stacked className="px-1" />
 
         <nav className="flex flex-col gap-2.5" aria-label="Primary">
           {NAV_ITEMS.map(({ href, label, icon: Icon }) => {

@@ -23,6 +23,7 @@ import { NeumorphicToggle, NeumorphicSwitch } from "@/components/ui/toggle";
 import { NeumorphicProgress, PaginationDots } from "@/components/ui/progress";
 import { SegmentedTrack, SegmentedButton } from "@/components/ui/segmented";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { Logo, LogoMark, LogoTile } from "@/components/logo";
 
 function Section({ title, description, children }: { title: string; description?: string; children: React.ReactNode }) {
   return (
@@ -58,14 +59,7 @@ export default function DesignSystemPage() {
       <div className="max-w-5xl mx-auto flex flex-col gap-20">
         <header className="flex items-start justify-between gap-6">
           <div className="flex items-center gap-4">
-            <Surface
-              variant="raised"
-              rounded="control"
-              glow="accent"
-              className="h-14 w-14 flex items-center justify-center text-2xl font-bold text-[var(--accent-foreground)] bg-[linear-gradient(145deg,var(--accent-hover),var(--accent))]"
-            >
-              N
-            </Surface>
+            <LogoTile size={56} />
             <div>
               <h1 className="text-3xl md:text-4xl font-bold text-[var(--text-primary)] tracking-tight">
                 Design System
@@ -204,6 +198,30 @@ export default function DesignSystemPage() {
             <NeumorphicButton size="sm">Small</NeumorphicButton>
             <NeumorphicButton size="md">Medium</NeumorphicButton>
             <NeumorphicButton size="lg">Large</NeumorphicButton>
+          </NeumorphicCard>
+        </Section>
+
+        <Section
+          title="Brand"
+          description="The mark is an N drawn as one connected path, its terminal rendered as a node — the letterform and the “point where things connect” idea in a single shape. It holds together down to favicon size."
+        >
+          <NeumorphicCard className="flex flex-wrap items-end gap-10">
+            <div className="flex items-end gap-6">
+              {[64, 40, 28, 16].map((s) => (
+                <div key={s} className="flex flex-col items-center gap-2">
+                  <LogoMark
+                    size={s}
+                    className="text-[var(--text-primary)]"
+                    nodeClassName="text-[var(--accent)]"
+                  />
+                  <span className="text-[10px] text-[var(--text-muted)]">{s}px</span>
+                </div>
+              ))}
+            </div>
+            <div className="flex flex-col gap-4">
+              <Logo size={40} />
+              <Logo size={40} stacked />
+            </div>
           </NeumorphicCard>
         </Section>
 
