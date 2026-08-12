@@ -9,38 +9,44 @@
  *   3. the surface sharing the page background, so it reads as extruded
  * Pressed states invert all three.
  */
+/*
+ * Palette: a near-neutral base carrying almost the whole UI in greyscale, with
+ * a single warm accent used sparingly for emphasis. Restraint is the point —
+ * colour reads as meaningful only when most of the screen isn't coloured.
+ */
 :root {
-  /* Light: cool, blue-tinted porcelain — never neutral gray. */
-  --surface: #e8eef7;
-  --surface-from: #f3f7fd;
-  --surface-to: #dae2ef;
+  /* Light: barely-cool porcelain. Kept close to neutral so the warm accent
+     stays the only real hue on screen. */
+  --surface: #e9ecf1;
+  --surface-from: #f4f6f9;
+  --surface-to: #dcdfe6;
   --surface-highlight: #ffffff;
-  --surface-shadow: #c0cbdd;
-  --page-tint: rgba(255, 255, 255, 0.6);
+  --surface-shadow: #c3c7d0;
+  --page-tint: rgba(255, 255, 255, 0.55);
 
-  --text-primary: #2c3e5d;
-  --text-secondary: #4a5a76;
-  --text-muted: #5a6780;
+  --text-primary: #23272f;
+  --text-secondary: #4c525c;
+  --text-muted: #5d636e;
 
-  --accent: #635bff;
-  --accent-hover: #524aee;
+  --accent: #f5871f;
+  --accent-hover: #e3760f;
   /* Darker cut of the accent reserved for text/links so it clears AA. */
-  --accent-text: #4f46e5;
+  --accent-text: #9a4a06;
   --accent-foreground: #ffffff;
 
   /* `*-text` cuts are darkened until they clear WCAG AA (4.5:1) against the
      light surface; the bright base colours stay for fills, dots and glows. */
-  --danger: #f5392b;
+  --danger: #ef3b3b;
   --danger-text: #c22619;
-  --warning: #f79b3c;
+  --warning: #f5a524;
   --warning-text: #83490a;
-  --success: #21b57a;
+  --success: #17a673;
   --success-text: #0c6641;
 
-  --glow-accent: 0 0 20px rgba(99, 91, 255, 0.38);
-  --glow-danger: 0 0 20px rgba(245, 57, 43, 0.42);
-  --glow-warning: 0 0 22px rgba(247, 155, 60, 0.42);
-  --glow-success: 0 0 20px rgba(33, 181, 122, 0.36);
+  --glow-accent: 0 0 20px rgba(245, 135, 31, 0.34);
+  --glow-danger: 0 0 20px rgba(239, 59, 59, 0.34);
+  --glow-warning: 0 0 22px rgba(245, 165, 36, 0.34);
+  --glow-success: 0 0 20px rgba(23, 166, 115, 0.3);
 
   --radius-card: 26px;
   --radius-control: 16px;
@@ -55,36 +61,38 @@
 }
 
 .dark {
-  /* Dark: charcoal with a faint blue cast. The highlight is a *lighter tint
-     of the surface*, not white — inverting the light palette reads as broken. */
-  --surface: #22262e;
-  --surface-from: #2a2f39;
-  --surface-to: #1b1f25;
-  --surface-highlight: #333944;
-  --surface-shadow: #111318;
-  --page-tint: rgba(255, 255, 255, 0.03);
+  /* Dark: flat neutral charcoal — deliberately no blue cast. A tinted dark
+     base fights the warm accent and is what makes this look muddy. The
+     highlight is a lighter tint of the same neutral, never white. */
+  --surface: #272727;
+  --surface-from: #2f2f2f;
+  --surface-to: #202020;
+  --surface-highlight: #383838;
+  --surface-shadow: #141414;
+  --page-tint: rgba(255, 255, 255, 0.022);
 
-  --text-primary: #e9edf5;
-  --text-secondary: #a5b0c2;
-  --text-muted: #8792a4;
+  --text-primary: #f2f2f2;
+  --text-secondary: #ababab;
+  --text-muted: #929292;
 
-  --accent: #7d75ff;
-  --accent-hover: #918aff;
-  --accent-text: #a5a0ff;
-  --accent-foreground: #14152a;
+  --accent: #ff9430;
+  --accent-hover: #ffa54f;
+  --accent-text: #ffb066;
+  --accent-foreground: #1c1305;
 
-  --danger: #ff453a;
-  --danger-text: #ff8078;
-  --warning: #ffab52;
-  --warning-text: #ffc182;
-  --success: #35d998;
-  --success-text: #6fe6b7;
+  --danger: #ef3b3b;
+  --danger-text: #ff8a84;
+  --warning: #ffb648;
+  --warning-text: #ffc57a;
+  --success: #2fc08a;
+  --success-text: #6bdcb0;
 
-  /* Glow carries much more of the visual weight against a dark ground. */
-  --glow-accent: 0 0 28px rgba(125, 117, 255, 0.55);
-  --glow-danger: 0 0 30px rgba(255, 69, 58, 0.6);
-  --glow-warning: 0 0 32px rgba(255, 171, 82, 0.55);
-  --glow-success: 0 0 28px rgba(53, 217, 152, 0.5);
+  /* Glow carries much more of the visual weight against a dark ground, but
+     kept tighter than a neon bloom — it should read as lit, not radioactive. */
+  --glow-accent: 0 0 24px rgba(255, 148, 48, 0.42);
+  --glow-danger: 0 0 24px rgba(239, 59, 59, 0.45);
+  --glow-warning: 0 0 24px rgba(255, 182, 72, 0.4);
+  --glow-success: 0 0 22px rgba(47, 192, 138, 0.34);
 }
 
 @theme inline {

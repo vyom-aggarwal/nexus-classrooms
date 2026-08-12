@@ -45,14 +45,14 @@ async function main() {
     name: "AP Biology",
     subject: "Science",
     section: "Period 3",
-    accentColor: "#1f9d6c",
+    accentColor: "#f5871f",
     ownerId: teacher.id,
   });
   const algebra = await upsertClass({
     name: "Algebra II",
     subject: "Math",
     section: "Period 5",
-    accentColor: "#6a63f1",
+    accentColor: "#d9534f",
     ownerId: teacher.id,
   });
 
@@ -206,7 +206,14 @@ async function main() {
 
 async function upsertClass(data: { name: string; subject: string; section: string; accentColor: string; ownerId: string }) {
   const existing = await prisma.class.findFirst({ where: { name: data.name, ownerId: data.ownerId } });
-  if (existing) return existing;
+  if (existing) {
+    // Re-apply presentation fields so re-seeding picks up palette changes;
+    // the invite code is left alone so any shared code keeps working.
+    return prisma.class.update({
+      where: { id: existing.id },
+      data: { subject: data.subject, section: data.section, accentColor: data.accentColor },
+    });
+  }
   return prisma.class.create({ data: { ...data, inviteCode: generateInviteCode() } });
 }
 

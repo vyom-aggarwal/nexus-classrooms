@@ -1,9 +1,20 @@
-// Import RRule only. rrule resolves to its ESM build under Next's bundler but
-// its CJS build under plain Node ESM (the seed script), and the two disagree
-// on what's importable: there's no `default` in the ESM build, and Node's CJS
-// lexer doesn't surface `Frequency`. `RRule` is the one binding both agree on,
-// and it carries the frequency constants as statics, so nothing else is needed.
-import { RRule } from "rrule";
+import * as rruleModule from "rrule";
+
+/*
+ * rrule ships no `exports` map, so consumers land on different builds:
+ * bundlers follow `module` (dist/esm) and get real named exports, while Node
+ * follows `main` (dist/es5, CommonJS) and hangs everything off `default`.
+ * Importing the ESM build directly isn't an option either — it uses
+ * extensionless relative imports that Node's resolver rejects.
+ *
+ * So no single static import works everywhere. A namespace import plus this
+ * probe does, and stays synchronous.
+ */
+const rrule = ("RRule" in rruleModule
+  ? rruleModule
+  : (rruleModule as unknown as { default: typeof rruleModule }).default) as typeof rruleModule;
+
+const { RRule } = rrule;
 
 export type RecurrenceFreq = "NONE" | "DAILY" | "WEEKLY";
 

@@ -8,7 +8,9 @@ import { requireUser } from "@/lib/session";
 import { generateInviteCode } from "@/lib/invite-code";
 import type { FormState } from "@/lib/actions/auth";
 
-const ACCENT_COLORS = ["#6a63f1", "#e0507a", "#1f9d6c", "#c98a1f", "#3b82c4", "#a5548d"];
+// Warm-leaning and deliberately narrow in hue. Classes need to be told apart,
+// not to introduce a second palette competing with the accent.
+const ACCENT_COLORS = ["#f5871f", "#ef6a4b", "#d9534f", "#c9822b", "#e0a02c", "#b5651d"];
 
 const createClassSchema = z.object({
   name: z.string().trim().min(1, "Class name is required").max(100),
